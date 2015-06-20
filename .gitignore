@@ -1,0 +1,6 @@
+*.xml
+data.json
+*.log
+*.pyc
+*.png
+.vagrant
