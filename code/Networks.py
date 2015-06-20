@@ -54,25 +54,39 @@ class StationsNetworks(object):
             nodes_colors = self._get_node_colors()
             nodes_pos = self._get_positions()
 
-            # We set the default settings of the graph
-            plt.axis((41.35, 41.46, -2.23, -2.10))
-            plt.axis('off')
-
             # we set the title of the graph
             datatime = datetime.fromtimestamp(timestamp)
             title = datatime.strftime('%d-%m-%y %H:%M:%S')
-            plt.title(title)
 
-            filename_map = join("images", "map_bicing_%04d.png" % i)
-            logging.info("Drawing file %s" % filename_map)
+            for weight_key in ['weight_5', 'weight_10', 'weight_15']:
+                # We set the default settings of the graph
+                plt.axis((41.35, 41.46, -2.23, -2.10))
+                plt.axis('off')
+                plt.title(title)
 
-            # we draw the graph in a file
-            nx.draw_networkx_nodes(self.G, nodes_pos, node_size=nodes_sizes, node_color=nodes_colors, with_labels=False)
-            # nx.draw_networkx_edges(G, pos, width=[1,2,3,4,5,6,7], edge_color='g')
-            plt.savefig(filename_map)
-            plt.close()
+                edges_sizes = self._get_edge_sizes(weight_key)
+                filename_map = join("images", weight_key, "map_bicing_%04d.png" % i)
+                logging.info("Drawing file %s" % filename_map)
+
+                # we draw the graph in a file
+                nx.draw_networkx_nodes(self.G, nodes_pos, node_size=nodes_sizes, node_color=nodes_colors, with_labels=False)
+                nx.draw_networkx_edges(self.G, nodes_pos, width=edges_sizes, edge_color='g')
+                plt.savefig(filename_map)
+                plt.close()
 
             i += 1
+
+    def _get_edge_sizes(self, weight_key):
+        edges = []
+        edges_not_std = [sum(edge[2][weight_key]) for edge in self.G.edges(data=True)]
+        if edges_not_std:
+            max_edge_value = max(edges_not_std)
+            if max_edge_value:
+                constant = float(1) / max_edge_value
+            else:
+                constant = 0
+            edges = [edge * constant for edge in edges_not_std]
+        return edges
 
     def _get_node_property(self, prop):
         return [self.G.node[node_id][prop] for node_id in self.G.nodes()]
@@ -207,10 +221,6 @@ class StationsNetworks(object):
                     node_size = 25
                     node_color = "b"
 
-                # We add the color and size properties to the node
-                self.G.node[node_id]['color'] = node_color
-                self.G.node[node_id]['size'] = node_size
-
                 # We try to know if the station change from the previous status
                 # this mean if the number of bikes changes
                 previous_bikes = self.G.node[node_id]['bikes']
@@ -223,9 +233,15 @@ class StationsNetworks(object):
                 if bikes < previous_bikes:
                     logging.debug("%d bikes part from station %d" % (previous_bikes - bikes, node_id))
                     station_less_bikes.append((timestamp, node_id))
+                    node_color = "m"
                 elif bikes > previous_bikes:
                     logging.debug("%d bikes arrived to station %d" % (bikes - previous_bikes, node_id))
                     station_more_bikes.append(node_id)
+                    node_color = "c"
+
+                # We add the color and size properties to the node
+                self.G.node[node_id]['color'] = node_color
+                self.G.node[node_id]['size'] = node_size
 
             # Remove bikes with more than 90 mins to reduce the search time
             break_i = 0
@@ -238,14 +254,52 @@ class StationsNetworks(object):
             station_less_bikes = station_less_bikes[break_i:]
 
             # Find all the edges
+            found_edges = set()
             for station_destination_id in station_more_bikes:
                 stations_origin_id = self._find_posible_origins(station_destination_id, station_less_bikes, timestamp)
                 logging.info("%d new edges to node %d" % (len(stations_origin_id), station_destination_id))
                 for station_origin_id in stations_origin_id:
-                    try:
-                        self.G[station_origin_id][station_destination_id]['weight'] += 1
-                    except:
-                        self.G.add_edge(station_origin_id, station_destination_id, weight=1)
+                    found_edges.add((station_origin_id, station_destination_id))
+
+            # Update edges
+            for edge in self.G.edges():
+                weight_5 = self.G[edge[0]][edge[1]]['weight_5']
+                weight_10 = self.G[edge[0]][edge[1]]['weight_10']
+                weight_15 = self.G[edge[0]][edge[1]]['weight_15']
+
+                was_removed = False
+                if edge in found_edges:
+                    # remove edge from set
+                    found_edges.remove(edge)
+
+                    # increment the weight of the edge
+                    weight_5.append(1)
+                    weight_10.append(1)
+                    weight_15.append(1)
+                else:
+                    if sum(weight_15) == 0:
+                        # remove edge
+                        self.G.remove_edge(edge[0], edge[1])
+                        was_removed = True
+                    else:
+                        weight_5.append(0)
+                        weight_10.append(0)
+                        weight_15.append(0)
+
+                # update weights from edge
+                if not was_removed:
+                    self.G[edge[0]][edge[1]]['weight_5'] = weight_5[-1:]
+                    self.G[edge[0]][edge[1]]['weight_10'] = weight_10[-5:]
+                    self.G[edge[0]][edge[1]]['weight_15'] = weight_15[-15:]
+
+            # Create the other edges
+            for edge in found_edges:
+                weights = {
+                    "weight_5": [1],
+                    "weight_10": [1],
+                    "weight_15": [1]
+                }
+                self.G.add_edge(edge[0], edge[1], weights)
 
             # when we process all the stations in the timestamp we return
             # the timestamp
