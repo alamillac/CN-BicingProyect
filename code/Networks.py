@@ -58,7 +58,7 @@ class StationsNetworks(object):
             datatime = datetime.fromtimestamp(timestamp)
             title = datatime.strftime('%d-%m-%y %H:%M:%S')
 
-            for weight_key in ['weight_5', 'weight_10', 'weight_15']:
+            for weight_key in ['weight_1', 'weight_5', 'weight_15']:
                 # We set the default settings of the graph
                 plt.axis((41.35, 41.46, -2.23, -2.10))
                 plt.axis('off')
@@ -263,8 +263,8 @@ class StationsNetworks(object):
 
             # Update edges
             for edge in self.G.edges():
+                weight_1 = self.G[edge[0]][edge[1]]['weight_1']
                 weight_5 = self.G[edge[0]][edge[1]]['weight_5']
-                weight_10 = self.G[edge[0]][edge[1]]['weight_10']
                 weight_15 = self.G[edge[0]][edge[1]]['weight_15']
 
                 was_removed = False
@@ -273,8 +273,8 @@ class StationsNetworks(object):
                     found_edges.remove(edge)
 
                     # increment the weight of the edge
+                    weight_1.append(1)
                     weight_5.append(1)
-                    weight_10.append(1)
                     weight_15.append(1)
                 else:
                     if sum(weight_15) == 0:
@@ -282,21 +282,21 @@ class StationsNetworks(object):
                         self.G.remove_edge(edge[0], edge[1])
                         was_removed = True
                     else:
+                        weight_1.append(0)
                         weight_5.append(0)
-                        weight_10.append(0)
                         weight_15.append(0)
 
                 # update weights from edge
                 if not was_removed:
-                    self.G[edge[0]][edge[1]]['weight_5'] = weight_5[-1:]
-                    self.G[edge[0]][edge[1]]['weight_10'] = weight_10[-5:]
+                    self.G[edge[0]][edge[1]]['weight_1'] = weight_1[-1:]
+                    self.G[edge[0]][edge[1]]['weight_5'] = weight_5[-5:]
                     self.G[edge[0]][edge[1]]['weight_15'] = weight_15[-15:]
 
             # Create the other edges
             for edge in found_edges:
                 weights = {
+                    "weight_1": [1],
                     "weight_5": [1],
-                    "weight_10": [1],
                     "weight_15": [1]
                 }
                 self.G.add_edge(edge[0], edge[1], weights)
