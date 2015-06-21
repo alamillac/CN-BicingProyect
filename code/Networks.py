@@ -65,7 +65,7 @@ class StationsNetworks(object):
                 plt.title(title)
 
                 edges_sizes = self._get_edge_sizes(weight_key)
-                filename_map = join("images", weight_key, "map_bicing_%04d.png" % i)
+                filename_map = join("public", "images", weight_key, "map_bicing_%04d.png" % i)
                 logging.info("Drawing file %s" % filename_map)
 
                 # we draw the graph in a file
@@ -148,7 +148,7 @@ class StationsNetworks(object):
         #   type: -> The type of the stations
         #   id: -> The id of the station }
 
-        max_cut_time = 90 * 60 # (90 mins) time in seconds
+        max_cut_time = 35 * 60  # (35 mins) time in seconds
 
         logging.info("Sorting data")
         # the data should be sorted by time
@@ -181,11 +181,11 @@ class StationsNetworks(object):
                     # We add the number of bikes in the station. We use this
                     # to know if the number of bikes change in the next timestamp
                     properties = {
-                            'pos': node_pos,
-                            'bikes': bikes,
-                            'lat': lat,
-                            'lon': lon
-                            }
+                        'pos': node_pos,
+                        'bikes': bikes,
+                        'lat': lat,
+                        'lon': lon
+                        }
 
                     # We found the bike durations from the current node to all the
                     # nodes
@@ -243,7 +243,10 @@ class StationsNetworks(object):
                 self.G.node[node_id]['color'] = node_color
                 self.G.node[node_id]['size'] = node_size
 
-            # Remove bikes with more than 90 mins to reduce the search time
+            # Remove bikes with more than 35 mins. According with wikipedia
+            # More than 95% of rides in the system are shorter than 30 minutes.
+            # https://en.wikipedia.org/wiki/Bicing
+            # We improve the accuracy and reduce times doing this.
             break_i = 0
             for processed_timestamp, processed_node_id in station_less_bikes:
                 deltatime = timestamp - processed_timestamp
