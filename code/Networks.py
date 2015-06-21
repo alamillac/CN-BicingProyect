@@ -60,7 +60,7 @@ class StationsNetworks(object):
 
             for weight_key in ['weight_1', 'weight_5', 'weight_15']:
                 # We set the default settings of the graph
-                plt.axis((41.35, 41.46, -2.23, -2.10))
+                plt.axis((2.10, 2.23, 41.35, 41.46))
                 plt.axis('off')
                 plt.title(title)
 
@@ -174,8 +174,8 @@ class StationsNetworks(object):
                     # to the coordinates of the station in a map
                     lat = station['lat']
                     lon = station['long']
-                    pos_x = lat
-                    pos_y = -lon
+                    pos_y = lat
+                    pos_x = lon
                     node_pos = [pos_x, pos_y]
 
                     # We add the number of bikes in the station. We use this
