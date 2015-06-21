@@ -4,6 +4,7 @@
 
 .center {
     text-align: center;
+    padding: 10px 0px;
 }
 
 .hidden {
@@ -22,12 +23,18 @@
     text-align: center;
 }
 
-.legend-box {
+.border-box {
     padding-bottom: 20px;
     border-style: solid;
     border-color: #ddd;
     border-width: 1px;
     border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.slider-bar {
+    width: 200px !important;
+    display: inline-block !important;
 }
 
 .legend {

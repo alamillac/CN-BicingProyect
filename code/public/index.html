@@ -19,13 +19,13 @@
                     <div>by Andrés Lamilla</div>
                 </header>
                 <div class="col-md-12">
-                    <div class="legend-box">
+                    <div class="border-box">
                         <h3 class="center">Legend</h3>
                         <div class="station">
                             <div class="background-blue legend"></div> Station not working
                         </div>
                         <div class="station">
-                            <div class="background-red legend"></div> Station witout bikes
+                            <div class="background-red legend"></div> Station without bikes
                         </div>
                         <div class="station">
                             <div class="background-green legend"></div> Station with bikes
@@ -35,6 +35,21 @@
                         </div>
                         <div class="station">
                             <div class="background-magenta legend"></div> At least one bike leave the station
+                        </div>
+                    </div>
+                    <div class="border-box">
+                        <h3 class="center">Controls</h3>
+                        <div class="center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default _fbackward" aria-label="Fast backward"><i class="glyphicon glyphicon-fast-backward" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-default _backward" aria-label="Backward"><i class="glyphicon glyphicon-backward" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-default _play_pause _play" aria-label="Play Pause"><i class="glyphicon glyphicon-play" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-default _forward" aria-label="Forward"><i class="glyphicon glyphicon-forward" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-default _fforward" aria-label="Fast forward"><i class="glyphicon glyphicon-fast-forward" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="center">
+                            <input class="slider-bar _speed" type="range" min="1" max="50" step="1" value="25">
                         </div>
                     </div>
                 </div>
@@ -61,24 +76,35 @@
         <script>
             var num_images = 474;
             Main.init({
+                controls: {
+                    'play_class': 'glyphicon-play',
+                    'pause_class': 'glyphicon-pause',
+                    'sel': {
+                        'fbackward': '._fbackward',
+                        'backward': '._backward',
+                        'play_pause': '._play_pause',
+                        'forward': '._forward',
+                        'fforward': '._fforward',
+                        'speed': '._speed'
+                    }
+
+                },
+                num_images: num_images,
                 images_data: [
                     {
                         'image_dir': 'images/weight_1',
                         'image_prefix': 'map_bicing_',
-                        'num_images': num_images,
-                        'sel': '#images_1'
+                        'id': 'images_1'
                     },
                     {
                         'image_dir': 'images/weight_5',
                         'image_prefix': 'map_bicing_',
-                        'num_images': num_images,
-                        'sel': '#images_5'
+                        'id': 'images_5'
                     },
                     {
                         'image_dir': 'images/weight_15',
                         'image_prefix': 'map_bicing_',
-                        'num_images': num_images,
-                        'sel': '#images_15'
+                        'id': 'images_15'
                     }
                 ]
             });
