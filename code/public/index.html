@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Complex Network project</title>
+        <script src="js/lib/jquery.js"></script>
+        <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/main.js"></script>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+    </head>
+    <body>
+        <main class="container">
+            <section class="row">
+                <header class="title center">
+                    <h1>Complex Network project</h1>
+                    <div>by Andrés Lamilla</div>
+                </header>
+                <div class="col-md-12">
+                    <div class="legend-box">
+                        <h3 class="center">Legend</h3>
+                        <div class="station">
+                            <div class="background-blue legend"></div> Station not working
+                        </div>
+                        <div class="station">
+                            <div class="background-red legend"></div> Station witout bikes
+                        </div>
+                        <div class="station">
+                            <div class="background-green legend"></div> Station with bikes
+                        </div>
+                        <div class="station">
+                            <div class="background-cyan legend"></div> At least one bike arrive to the station
+                        </div>
+                        <div class="station">
+                            <div class="background-magenta legend"></div> At least one bike leave the station
+                        </div>
+                    </div>
+                </div>
+                <div class="image-block">
+                    <div class="box col-md-6 col-xs-12">
+                        <h3 class="center">Image 1 min</h3>
+                        <img src="" id="images_1" class="img-responsive img-thumbnail" alt="image 1"/>
+                    </div>
+                    <div class="box col-md-6 col-xs-12">
+                        <h3 class="center">Image 5 mins</h3>
+                        <img src="" id="images_5" class="img-responsive img-thumbnail" alt="image 5"/>
+                    </div>
+                    <div class="box col-md-6 col-xs-12">
+                        <h3 class="center">Image 15 mins</h3>
+                        <img src="" id="images_15" class="img-responsive img-thumbnail" alt="image 15"/>
+                    </div>
+                    <div class="box col-md-6 col-xs-12">
+                        <h3 class="center">Bicing real map</h3>
+                        <img src="images/BicingMap.png" id="bicingMap" class="img-responsive img-thumbnail" alt="Bicing image"/>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script>
+            var num_images = 474;
+            Main.init({
+                images_data: [
+                    {
+                        'image_dir': 'images/weight_1',
+                        'image_prefix': 'map_bicing_',
+                        'num_images': num_images,
+                        'sel': '#images_1'
+                    },
+                    {
+                        'image_dir': 'images/weight_5',
+                        'image_prefix': 'map_bicing_',
+                        'num_images': num_images,
+                        'sel': '#images_5'
+                    },
+                    {
+                        'image_dir': 'images/weight_15',
+                        'image_prefix': 'map_bicing_',
+                        'num_images': num_images,
+                        'sel': '#images_15'
+                    }
+                ]
+            });
+        </script>
+    </body>
+</html>

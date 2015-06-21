@@ -1,0 +1,58 @@
+.box {
+    padding: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.title h1 {
+    margin-bottom: 0px;
+}
+
+.title {
+    margin-bottom: 30px;
+}
+
+.station {
+    text-align: center;
+}
+
+.legend-box {
+    padding-bottom: 20px;
+    border-style: solid;
+    border-color: #ddd;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.legend {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
+.background-blue {
+    background-color: blue;
+}
+
+.background-red {
+    background-color: red;
+}
+
+.background-green {
+    background-color: green;
+}
+
+.background-magenta {
+    background-color: magenta;
+}
+
+.background-cyan {
+    background-color: cyan;
+}
