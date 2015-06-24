@@ -28,7 +28,8 @@ class WalkingTimes(object):
         except KeyError:
             self.google_api_key = None
 
-        # Bike scale values
+        # Bike scale values. I got this values with information of my own tracks
+        # in some stations
         self.bike_scale_factor = 2.13
         self.bike_ci_percentage = 0.2
 
@@ -73,7 +74,8 @@ class WalkingTimes(object):
         """
         Find the distance and the duration of going from
         one point to another by walking using the google
-        distancematrix api.
+        distancematrix api if it is possible, or the vincenty
+        algorithm if it is not possible.
         https://developers.google.com/maps/documentation/distancematrix/?hl=es
         """
         origin_str = self._coord_to_string(origin)
